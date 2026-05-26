@@ -1,26 +1,431 @@
 @import "tailwindcss";
 
+/* ================================================================
+   Infragrid — Design Tokens & Global Styles
+   Type: EB Garamond (serif display) · Manrope (UI/body) · JetBrains Mono
+   ================================================================ */
+
+@theme {
+  /* Brand */
+  --color-brand:       #2f6b45;
+  --color-brand-deep:  #244f33;
+  --color-brand-soft:  #315d43;
+  --color-brand-tint:  #e4ece6;
+  --color-brand-wash:  #f0f3ee;
+
+  /* Surfaces */
+  --color-bg:          #f8f7f3;
+  --color-bg-elev:     #ffffff;
+  --color-bg-sunken:   #f1efe8;
+
+  /* Foreground */
+  --color-fg:          #17201b;
+  --color-fg-strong:   #0c1410;
+  --color-fg-muted:    #72746e;
+  --color-fg-subtle:   #9a9d97;
+
+  /* Lines */
+  --color-line:        #dfdfd8;
+  --color-line-strong: #c5c6bd;
+
+  /* Font families (CSS variables set on <html> by next/font) */
+  --font-serif: var(--font-garamond, "Georgia", "Iowan Old Style", serif);
+  --font-sans:  var(--font-manrope, system-ui, -apple-system, sans-serif);
+  --font-mono:  var(--font-jetbrains, ui-monospace, "SFMono-Regular", Menlo, monospace);
+}
+
+/* ----------------------------------------------------------------
+   CSS variable aliases (used directly in custom CSS below)
+   ---------------------------------------------------------------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg:          #f8f7f3;
+  --bg-elev:     #ffffff;
+  --bg-sunken:   #f1efe8;
+  --fg:          #17201b;
+  --fg-strong:   #0c1410;
+  --fg-muted:    #72746e;
+  --fg-subtle:   #9a9d97;
+  --brand:       #2f6b45;
+  --brand-deep:  #244f33;
+  --brand-soft:  #315d43;
+  --brand-tint:  #e4ece6;
+  --line:        #dfdfd8;
+  --line-strong: #c5c6bd;
+  --dur-fast:    120ms;
+  --dur-normal:  200ms;
+  --ease-std:    cubic-bezier(0.2, 0, 0, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* ----------------------------------------------------------------
+   Base
+   ---------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+}
+
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+::selection { background: color-mix(in oklab, #2f6b45 22%, transparent); }
+
+/* ================================================================
+   Shell — sidebar + content
+   ================================================================ */
+.site-shell {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  min-height: calc(100vh - 360px);
+}
+
+/* ================================================================
+   Sidebar
+   ================================================================ */
+.sidebar {
+  padding: 108px 56px 64px;
+  position: sticky;
+  top: 0;
+  height: fit-content;
+  align-self: start;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--brand);
+  transition: color var(--dur-fast) var(--ease-std);
+}
+.brand:hover { color: var(--brand-deep); }
+
+.brand-icon { display: inline-flex; width: 28px; height: 28px; }
+.brand-icon svg { width: 100%; height: 100%; fill: currentColor; }
+.brand-name { font-size: 1.02rem; font-weight: 700; letter-spacing: -0.03em; }
+
+.sidebar-nav {
+  display: grid;
+  gap: 8px;
+  margin-top: 66px;
+  justify-items: start;
+}
+.sidebar-link {
+  display: block;
+  padding: 8px 12px;
+  color: #24302a;
+  font-size: 0.97rem;
+  background: transparent;
+  border-radius: 2px;
+  transition: background var(--dur-fast) var(--ease-std);
+}
+.sidebar-link:hover { background: rgba(23, 32, 27, 0.04); }
+.sidebar-link.is-active { background: rgba(23, 32, 27, 0.06); }
+
+.sidebar-foot {
+  margin-top: 80px;
+  display: grid;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--fg-muted);
+  letter-spacing: 0.02em;
+}
+.sidebar-foot a {
+  border-bottom: 1px solid rgba(23, 32, 27, 0.2);
+  transition: border-color var(--dur-fast) var(--ease-std);
+}
+.sidebar-foot a:hover { border-bottom-color: var(--fg); }
+
+/* ================================================================
+   Page content
+   ================================================================ */
+.page { padding: 98px 80px 100px 8px; }
+.content { max-width: 760px; }
+.content-wide { max-width: 1040px; }
+
+/* ================================================================
+   Section primitives
+   ================================================================ */
+.section { padding-top: 96px; }
+.section-hairline { border-top: 1px solid var(--line); padding-top: 96px; }
+
+.eyebrow {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  margin-bottom: 28px;
+}
+.eyebrow-brand { color: var(--brand); }
+
+/* ================================================================
+   Typography
+   ================================================================ */
+.h-display {
+  margin: 0 0 36px;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(3.6rem, 7.5vw, 5.4rem);
+  line-height: 0.94;
+  letter-spacing: -0.05em;
+  text-wrap: balance;
+}
+.h-display em { font-style: italic; font-weight: 400; }
+
+.h-section {
+  margin: 0 0 28px;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(2.4rem, 4vw, 3rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+.h-section em { font-style: italic; font-weight: 400; }
+
+.prose { max-width: 64ch; }
+.prose p {
+  margin: 0 0 24px;
+  font-size: 1.12rem;
+  line-height: 1.62;
+  text-wrap: pretty;
+}
+
+p.lede {
+  margin: 0 0 24px;
+  font-size: 1.28rem;
+  line-height: 1.55;
+}
+
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--brand);
+  font-size: 1rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease-std);
+}
+.text-link:hover { color: var(--brand-deep); }
+
+.underlined-link {
+  border-bottom: 1px solid rgba(23, 32, 27, 0.4);
+  transition: border-color var(--dur-fast) var(--ease-std);
+}
+.underlined-link:hover { border-bottom-color: var(--fg); }
+
+/* ================================================================
+   Hero
+   ================================================================ */
+.hero { padding-top: 24px; max-width: 920px; }
+.hero .h-display { margin-bottom: 40px; }
+
+/* ================================================================
+   Layer cards (Embed · Map · Deploy · Repeat)
+   ================================================================ */
+.layers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  margin-top: 32px;
+}
+.layer {
+  background: var(--bg);
+  padding: 28px 30px 32px;
+  display: grid;
+  gap: 10px;
+  min-height: 200px;
+  align-content: start;
+}
+.layer .num {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--brand);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.layer .h {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 1.55rem;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+.layer .p {
+  margin: 4px 0 0;
+  font-size: 0.96rem;
+  line-height: 1.55;
+  color: var(--fg-muted);
+  max-width: 36ch;
+}
+
+/* ================================================================
+   Team grid
+   ================================================================ */
+.team {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  margin-top: 32px;
+}
+.team .member {
+  background: var(--bg);
+  padding: 30px 34px 34px;
+}
+.team .name {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 1.8rem;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin: 0 0 4px;
+}
+.team .role {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brand);
+  margin-bottom: 16px;
+}
+.team .bio {
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: var(--fg);
+  margin: 0;
+  max-width: 38ch;
+}
+
+/* ================================================================
+   CTA band
+   ================================================================ */
+.cta-band {
+  background: var(--brand-soft);
+  color: rgba(255, 255, 255, 0.94);
+  padding: 56px 60px;
+  margin-top: 96px;
+  position: relative;
+  overflow: hidden;
+}
+.cta-band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(160% 100% at 100% 130%, transparent 50%, rgba(255,255,255,0.06) 51%, transparent 53%),
+    radial-gradient(140% 90% at 96% 125%, transparent 44%, rgba(255,255,255,0.05) 45%, transparent 47%);
+  pointer-events: none;
+}
+.cta-band > * { position: relative; z-index: 1; }
+.cta-band .h {
+  margin: 0 0 16px;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 2.4rem;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+.cta-band .p {
+  margin: 0 0 22px;
+  max-width: 56ch;
+  font-size: 1.08rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.78);
+}
+.cta-band .links {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+.cta-band a {
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  font-weight: 600;
+  transition: border-color var(--dur-fast) var(--ease-std);
+}
+.cta-band a:hover { border-bottom-color: #fff; }
+
+/* ================================================================
+   Footer
+   ================================================================ */
+.site-footer {
+  background: var(--brand-soft);
+  color: rgba(255, 255, 255, 0.9);
+}
+.footer-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 64px 120px;
+  padding: 96px 84px 84px;
+}
+.footer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+.footer-icon { color: currentColor; }
+.footer-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(140px, 1fr));
+  gap: 60px;
+}
+.footer-heading {
+  margin: 0 0 22px;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.footer-columns a {
+  display: block;
+  margin-bottom: 16px;
+  color: rgba(255, 255, 255, 0.9);
+  transition: color var(--dur-fast) var(--ease-std);
+}
+.footer-columns a:hover { color: #fff; }
+.footer-note {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.94rem;
+  max-width: 60ch;
+}
+
+/* ================================================================
+   Responsive
+   ================================================================ */
+@media (max-width: 1100px) {
+  .site-shell { grid-template-columns: 240px minmax(0, 1fr); }
+  .sidebar { padding: 64px 36px 40px; }
+  .page { padding: 64px 56px 80px 8px; }
+}
+
+@media (max-width: 860px) {
+  .site-shell { grid-template-columns: 1fr; }
+  .sidebar { position: static; padding: 28px 24px 8px; }
+  .sidebar-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+  .sidebar-foot { display: none; }
+  .page { padding: 28px 24px 64px; }
+  .layers, .team { grid-template-columns: 1fr; }
+  .footer-inner { grid-template-columns: 1fr; padding: 56px 24px 56px; gap: 36px; }
+  .footer-columns { gap: 32px; grid-template-columns: repeat(2, 1fr); }
+  .cta-band { padding: 36px 28px; margin-top: 56px; }
+  .cta-band .h { font-size: 1.8rem; }
 }
