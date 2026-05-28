@@ -3,6 +3,7 @@ import { EB_Garamond, Manrope, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/Sidebar";
 import { Footer } from "@/components/Footer";
+import { Analytics } from "@vercel/analytics/next";
 
 const garamond = EB_Garamond({
   variable: "--font-garamond",
@@ -49,6 +50,7 @@ export default function RootLayout({
         </div>
         <Footer />
       </body>
+      <Analytics />
     </html>
   );
 }
