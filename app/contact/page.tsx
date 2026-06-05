@@ -8,13 +8,13 @@ export const metadata: Metadata = {
 
 const team = [
   {
-    role: "Co-CEO",
+    role: "Cofounder",
     name: "Ashwin Kodibagkar",
     bio: "ex Mercor, Microsoft, Amazon.",
     email: "ashwin@infragrid.ai",
   },
   {
-    role: "Co-CEO",
+    role: "Cofounder",
     name: "Ephraim Sun",
     bio: "ex Palantir, Forge, Amazon.",
     email: "ephraim@infragrid.ai",
@@ -48,7 +48,14 @@ export default function ContactPage() {
               <div className="role">{role}</div>
               <h3 className="name">{name}</h3>
               <p className="bio">{bio}</p>
-              <p className="bio" style={{ marginTop: 12, fontSize: "0.9rem", color: "var(--fg-muted)" }}>
+              <p
+                className="bio"
+                style={{
+                  marginTop: 12,
+                  fontSize: "0.9rem",
+                  color: "var(--fg-muted)",
+                }}
+              >
                 <a className="underlined-link" href={`mailto:${email}`}>
                   {email}
                 </a>
