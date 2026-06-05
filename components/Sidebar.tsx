@@ -42,6 +42,24 @@ export function Sidebar() {
         <span>
           <a href="mailto:hello@infragrid.ai">hello@infragrid.ai</a>
         </span>
+        <span>
+          <a
+            href="https://www.linkedin.com/company/infragrid-ai/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            LinkedIn
+          </a>
+        </span>
+        <span>
+          <a
+            href="https://x.com/infragrid"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            X
+          </a>
+        </span>
       </div>
     </aside>
   );

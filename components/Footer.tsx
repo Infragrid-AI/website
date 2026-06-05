@@ -22,6 +22,20 @@ export function Footer() {
           <div>
             <p className="footer-heading">Direct</p>
             <a href="mailto:hello@infragrid.ai">hello@infragrid.ai</a>
+            <a
+              href="https://www.linkedin.com/company/infragrid-ai/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              LinkedIn
+            </a>
+            <a
+              href="https://x.com/infragrid"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              X
+            </a>
           </div>
         </div>
 

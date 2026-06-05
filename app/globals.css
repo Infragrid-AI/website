@@ -228,6 +228,44 @@ p.lede {
 .hero .h-display { margin-bottom: 40px; }
 
 /* ================================================================
+   Backed by — investor / partner strip
+   ================================================================ */
+.backers { padding-top: 88px; margin-top: 92px; }
+.backers .eyebrow { margin-bottom: 32px; }
+
+.backer-row {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 24px 52px;
+}
+.backer {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 1.7rem;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--fg-subtle);
+  transition: color var(--dur-normal) var(--ease-std);
+}
+.backer:hover { color: var(--fg-strong); }
+.backer-lead {
+  color: var(--brand);
+  font-style: italic;
+  font-weight: 600;
+}
+.backer-lead:hover { color: var(--brand-deep); }
+
+@media (max-width: 860px) {
+  .backers { padding-top: 56px; margin-top: 56px; }
+  .backer-row { gap: 18px 32px; }
+  .backer { font-size: 1.4rem; }
+}
+
+/* ================================================================
    Layer cards (Embed · Map · Deploy · Repeat)
    ================================================================ */
 .layers {

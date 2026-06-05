@@ -31,6 +31,18 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Backed by */}
+      <section className="backers section-hairline">
+        <span className="eyebrow">Backed by the best</span>
+        <ul className="backer-row" aria-label="Investors and partners">
+          <li className="backer backer-lead">a16z</li>
+          <li className="backer">amazon</li>
+          <li className="backer">Mercor</li>
+          <li className="backer">Palantir</li>
+          <li className="backer">Microsoft</li>
+        </ul>
+      </section>
+
       {/* The unit of work */}
       <section className="section section-hairline">
         <div className="content">
