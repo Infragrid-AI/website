@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
 
+const title = "Infragrid | Contact";
+const description =
+  "Talk to Infragrid about scoping a slice, on-prem deployment, or security and compliance review.";
+
 export const metadata: Metadata = {
-  title: "Infragrid | Contact",
-  description:
-    "Talk to Infragrid about scoping a slice, on-prem deployment, or security and compliance review.",
+  title,
+  description,
+  alternates: { canonical: "/contact" },
+  openGraph: { title, description, url: "/contact", type: "website" },
+  twitter: { card: "summary_large_image", title, description },
 };
 
 const team = [

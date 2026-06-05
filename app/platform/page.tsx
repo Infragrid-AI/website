@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+const title = "Infragrid | Platform";
+const description =
+  "Infrastructure for shipping agents on real enterprise work — deployed in your environment, on your tools, scoped to one slice at a time.";
+
 export const metadata: Metadata = {
-  title: "Infragrid | Platform",
-  description:
-    "Infrastructure for shipping agents on real enterprise work — deployed in your environment, on your tools, scoped to one slice at a time.",
+  title,
+  description,
+  alternates: { canonical: "/platform" },
+  openGraph: { title, description, url: "/platform", type: "website" },
+  twitter: { card: "summary_large_image", title, description },
 };
 
 const layers = [
