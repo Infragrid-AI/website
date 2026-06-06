@@ -1,11 +1,63 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
 import Link from "next/link";
+import { BUILDER_LOGOS } from "@/lib/builder-logos";
+
+// Raster logos that live in /public/builder-logos. Rendered as a colorizable
+// silhouette (CSS mask), so they match the monochrome marks and hover-colorize.
+const IMAGE_LOGOS: Record<string, string> = { Mercor: "mercor.png" };
+
+function imageLogoSrc(name: string): string | null {
+  const file = IMAGE_LOGOS[name];
+  if (!file) return null;
+  const onDisk = existsSync(join(process.cwd(), "public", "builder-logos", file));
+  return onDisk ? `/builder-logos/${file}` : null;
+}
 
 export const metadata: Metadata = {
   title: "Infragrid — RL transformation, one slice at a time",
   description:
     "We embed inside enterprise teams and ship agents that automate real work — one bounded slice at a time.",
 };
+
+// Brand colors revealed on hover. Tweak any hex freely.
+const BUILDERS = [
+  { name: "Palantir", color: "#101820" },
+  { name: "Amazon", color: "#FF9900" },
+  { name: "Mercor", color: "#5B50E8" },
+  { name: "Microsoft", color: "#0067B8" },
+  { name: "a16z", color: "#1A1A1A" },
+  { name: "NVIDIA", color: "#76B900" },
+  { name: "Wells Fargo", color: "#D71E28" },
+];
+
+function BuilderItem({ name, color }: { name: string; color: string }) {
+  const logo = BUILDER_LOGOS[name];
+  const img = imageLogoSrc(name);
+  return (
+    <span className="builder" style={{ "--brand-color": color } as CSSProperties}>
+      {logo ? (
+        <svg
+          className="builder-mark"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d={logo} fill="currentColor" />
+        </svg>
+      ) : img ? (
+        <span
+          className="builder-mark builder-mark-img"
+          aria-hidden="true"
+          style={{ "--logo-src": `url(${img})` } as CSSProperties}
+        />
+      ) : null}
+      <span className="builder-name">{name}</span>
+    </span>
+  );
+}
 
 export default function HomePage() {
   return (
@@ -31,16 +83,33 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Backed by */}
-      <section className="backers section-hairline">
-        <span className="eyebrow">Backed by the best</span>
-        <ul className="backer-row" aria-label="Investors and partners">
-          <li className="backer backer-lead">a16z</li>
-          <li className="backer">amazon</li>
-          <li className="backer">Mercor</li>
-          <li className="backer">Palantir</li>
-          <li className="backer">Microsoft</li>
-        </ul>
+      {/* Built by engineers from */}
+      <section className="builders section-hairline">
+        <span className="eyebrow">Built by engineers from</span>
+        <div
+          className="marquee"
+          role="img"
+          aria-label={`Built by engineers from ${BUILDERS.map(
+            (b) => b.name,
+          ).join(", ")}`}
+        >
+          <div className="marquee-track">
+            <div className="marquee-group">
+              {BUILDERS.map((b) => (
+                <BuilderItem key={b.name} name={b.name} color={b.color} />
+              ))}
+            </div>
+            <div className="marquee-group" data-clone aria-hidden="true">
+              {BUILDERS.map((b) => (
+                <BuilderItem
+                  key={`clone-${b.name}`}
+                  name={b.name}
+                  color={b.color}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* The unit of work */}

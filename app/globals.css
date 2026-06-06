@@ -259,42 +259,94 @@ p.lede {
 .hero .h-display { margin-bottom: 40px; }
 
 /* ================================================================
-   Backed by — investor / partner strip
+   Built by — engineer pedigree marquee
    ================================================================ */
-.backers { padding-top: 88px; margin-top: 92px; }
-.backers .eyebrow { margin-bottom: 32px; }
+.builders { padding-top: 88px; margin-top: 92px; }
+.builders .eyebrow { margin-bottom: 40px; }
 
-.backer-row {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.marquee {
+  width: 100%;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 7%,
+    #000 93%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 7%,
+    #000 93%,
+    transparent 100%
+  );
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 50s linear infinite;
+}
+.marquee:hover .marquee-track { animation-play-state: paused; }
+
+.marquee-group {
   display: flex;
   align-items: baseline;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 28px 64px;
+  gap: 120px;
+  padding-right: 120px;
+  flex-shrink: 0;
 }
-.backer {
+.builder {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42em;
   font-family: var(--font-serif);
   font-weight: 500;
-  font-size: 2.2rem;
+  font-size: 2.9rem;
   line-height: 1;
   letter-spacing: -0.03em;
   color: var(--fg-subtle);
-  transition: color var(--dur-normal) var(--ease-std);
+  white-space: nowrap;
+  transition: color var(--dur-normal) var(--ease-std),
+    transform var(--dur-normal) var(--ease-std);
 }
-.backer:hover { color: var(--fg-strong); }
-.backer-lead {
-  color: var(--brand);
-  font-style: italic;
-  font-weight: 600;
+.builder:hover {
+  color: var(--brand-color, var(--fg-strong));
+  transform: translateY(-2px);
 }
-.backer-lead:hover { color: var(--brand-deep); }
+.builder-mark {
+  display: inline-block;
+  width: 0.86em;
+  height: 0.86em;
+  flex-shrink: 0;
+  fill: currentColor;
+}
+.builder-mark-img {
+  background-color: currentColor;
+  -webkit-mask: var(--logo-src) center / contain no-repeat;
+  mask: var(--logo-src) center / contain no-repeat;
+}
+.builder-name { display: inline-block; }
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
 
 @media (max-width: 860px) {
-  .backers { padding-top: 56px; margin-top: 56px; }
-  .backer-row { justify-content: flex-start; gap: 20px 36px; }
-  .backer { font-size: 1.6rem; }
+  .builders { padding-top: 56px; margin-top: 56px; }
+  .marquee-group { gap: 72px; padding-right: 72px; }
+  .builder { font-size: 2rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .marquee-track { animation: none; width: 100%; }
+  .marquee-group[data-clone] { display: none; }
+  .marquee-group { flex-wrap: wrap; gap: 18px 36px; padding-right: 0; }
 }
 
 /* ================================================================
