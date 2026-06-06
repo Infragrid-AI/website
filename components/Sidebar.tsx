@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { InfragridLogo } from "./InfragridLogo";
+import { SEGMENT_NAV } from "@/lib/contact-options";
 
 const navLinks = [
   { href: "/", label: "About" },
   { href: "/platform", label: "Platform" },
+  ...SEGMENT_NAV.map(({ label, href }) => ({ href, label })),
   { href: "/contact", label: "Contact" },
 ];
 

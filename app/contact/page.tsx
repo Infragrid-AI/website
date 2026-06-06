@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { InterestForm } from "@/components/InterestForm";
 
 const title = "Infragrid | Contact";
 const description =
@@ -42,6 +43,19 @@ export default function ContactPage() {
             hello@infragrid.ai
           </a>
         </p>
+      </section>
+
+      {/* Interest form */}
+      <section className="section section-hairline content-wide">
+        <span className="eyebrow eyebrow-brand">Register interest</span>
+        <h2 className="h-section">Tell us who you are.</h2>
+        <p className="prose" style={{ marginBottom: 8 }}>
+          Labs, data providers, and everyone in between. Fill out the form and
+          we&apos;ll reach out.
+        </p>
+        <div style={{ maxWidth: 760, marginTop: 32 }}>
+          <InterestForm />
+        </div>
       </section>
 
       {/* Team */}
