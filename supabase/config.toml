@@ -1,0 +1,10 @@
+# Minimal Supabase CLI config for deploying the website's Edge Function(s) to
+# the shared project (yjfagnezvkprkutrhdcd). Deploy with --project-ref.
+
+project_id = "infragrid-website"
+
+# Interest / contact submission → Slack notifier. Called by a DB trigger
+# (pg_net) on interest_submissions INSERT (no JWT); auth via the
+# x-webhook-secret header checked inside the function.
+[functions.notify-interest]
+verify_jwt = false
