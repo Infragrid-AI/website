@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createInterestClient } from "@/lib/supabase/interest";
+import { sendInterestConfirmation } from "@/lib/resend";
 
 export const runtime = "nodejs";
 
@@ -95,6 +96,11 @@ export async function POST(request: Request) {
         { status: 500 },
       );
     }
+
+    // Lead is saved — send the confirmation email. Best-effort: awaited so it
+    // runs to completion on serverless (no fire-and-forget freeze), but it never
+    // throws, so a mail failure can't turn a successful submission into an error.
+    await sendInterestConfirmation({ email, firstName });
   } catch (err) {
     console.error("interest route error:", err);
     return NextResponse.json(
