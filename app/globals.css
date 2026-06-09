@@ -589,6 +589,19 @@ p.lede {
 .field-textarea { resize: vertical; line-height: 1.55; }
 .field-select { appearance: none; cursor: pointer; }
 
+/* Inline field validation (e.g. work email) */
+.field-input-invalid,
+.field-input-invalid:focus {
+  border-color: #9a2c2c;
+  box-shadow: 0 0 0 3px color-mix(in oklab, #9a2c2c 14%, transparent);
+}
+.field-error {
+  display: block;
+  margin-top: 7px;
+  font-size: 0.86rem;
+  color: #9a2c2c;
+}
+
 /* Checkbox groups (data type, storage) */
 .check-group {
   border: none;

@@ -98,6 +98,20 @@ const REFERRAL_OPTIONS = [
   "Other",
 ];
 
+// Client-side "is this a plausible email" check — mirrors the server's
+// validation but gives inline feedback before submit. Intentionally lenient
+// (format + a real-looking domain/TLD), not an attempt to verify deliverability.
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+function isLikelyValidEmail(value: string): boolean {
+  const email = value.trim();
+  if (!EMAIL_RE.test(email)) return false;
+  const domain = email.slice(email.indexOf("@") + 1);
+  if (domain.startsWith(".") || domain.endsWith(".") || domain.includes("..")) {
+    return false;
+  }
+  return true;
+}
+
 type Status = "idle" | "submitting" | "success" | "error";
 
 export function InterestForm() {
@@ -105,6 +119,7 @@ export function InterestForm() {
   const [checkedTypes, setCheckedTypes] = useState<Set<string>>(new Set());
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState<string>("");
+  const [emailError, setEmailError] = useState<string>("");
 
   const active = SEGMENTS.find((s) => s.id === segment)!;
 
@@ -141,6 +156,16 @@ export function InterestForm() {
 
     const form = event.currentTarget;
     const data = new FormData(form);
+
+    // Gate on a plausible email before hitting the network.
+    const emailValue = String(data.get("email") ?? "").trim();
+    if (!isLikelyValidEmail(emailValue)) {
+      setEmailError("Enter a valid email address (e.g. john@company.com).");
+      (form.elements.namedItem("email") as HTMLInputElement | null)?.focus();
+      return;
+    }
+    setEmailError("");
+
     const payload = {
       segment,
       firstName: data.get("firstName"),
@@ -270,13 +295,25 @@ export function InterestForm() {
       <label className="field field-stacked">
         <span className="field-label">Work email</span>
         <input
-          className="field-input"
+          className={`field-input${emailError ? " field-input-invalid" : ""}`}
           type="email"
           name="email"
           placeholder="john@infragrid.ai"
           autoComplete="email"
           required
+          aria-invalid={emailError ? true : undefined}
+          aria-describedby={emailError ? "email-error" : undefined}
+          onBlur={(e) => {
+            const v = e.target.value.trim();
+            setEmailError(v && !isLikelyValidEmail(v) ? "Enter a valid email address." : "");
+          }}
+          onChange={() => emailError && setEmailError("")}
         />
+        {emailError && (
+          <span className="field-error" id="email-error" role="alert">
+            {emailError}
+          </span>
+        )}
       </label>
 
       {active.needsCountry && (
