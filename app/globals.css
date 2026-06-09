@@ -387,42 +387,31 @@ p.lede {
 
 .marquee-group {
   display: flex;
-  align-items: baseline;
-  gap: 120px;
-  padding-right: 120px;
+  align-items: center;
+  gap: 92px;
+  padding-right: 92px;
   flex-shrink: 0;
 }
 .builder {
   display: inline-flex;
   align-items: center;
-  gap: 0.42em;
-  font-family: var(--font-serif);
-  font-weight: 500;
-  font-size: 2.9rem;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: var(--fg-subtle);
-  white-space: nowrap;
-  transition: color var(--dur-normal) var(--ease-std),
-    transform var(--dur-normal) var(--ease-std);
+  transition: transform var(--dur-normal) var(--ease-std);
 }
-.builder:hover {
-  color: var(--brand-color, var(--fg-strong));
-  transform: translateY(-2px);
-}
-.builder-mark {
-  display: inline-block;
-  width: 0.86em;
-  height: 0.86em;
+.builder:hover { transform: translateY(-2px); }
+.builder-logo {
+  display: block;
+  height: var(--logo-h, 32px);
+  width: auto;
   flex-shrink: 0;
-  fill: currentColor;
+  filter: grayscale(1);
+  opacity: 0.5;
+  transition: filter var(--dur-normal) var(--ease-std),
+    opacity var(--dur-normal) var(--ease-std);
 }
-.builder-mark-img {
-  background-color: currentColor;
-  -webkit-mask: var(--logo-src) center / contain no-repeat;
-  mask: var(--logo-src) center / contain no-repeat;
+.builder:hover .builder-logo {
+  filter: none;
+  opacity: 1;
 }
-.builder-name { display: inline-block; }
 
 @keyframes marquee-scroll {
   from { transform: translateX(0); }
@@ -431,8 +420,8 @@ p.lede {
 
 @media (max-width: 860px) {
   .builders { padding-top: 56px; margin-top: 56px; }
-  .marquee-group { gap: 72px; padding-right: 72px; }
-  .builder { font-size: 2rem; }
+  .marquee-group { gap: 60px; padding-right: 60px; }
+  .builder-logo { height: calc(var(--logo-h, 32px) * 0.82); }
 }
 
 @media (prefers-reduced-motion: reduce) {

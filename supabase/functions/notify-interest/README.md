@@ -20,19 +20,27 @@ One table, three message types (keyed by `segment`):
 ## Setup
 
 This lives in the **shared** Supabase project (`yjfagnezvkprkutrhdcd`), the same
-one the exchange notifiers use — so `SLACK_WEBHOOK_URL` and `RFP_WEBHOOK_SECRET`
-are likely already set. If so, you can skip step 2.
+one the exchange notifiers use — so `SLACK_WEBHOOK_URL` may already be set.
+
+> **Never commit the webhook secret.** It is stored in two places only — the
+> function's env (`INTEREST_WEBHOOK_SECRET`) and Supabase **Vault** (read by the
+> trigger). Generate it once with `openssl rand -hex 16` and keep it out of git.
 
 1. **(If needed) create a Slack Incoming Webhook**
    - Slack → Apps → your app → **Incoming Webhooks** → Activate → **Add New
      Webhook to Workspace** → pick the channel → copy the
      `https://hooks.slack.com/services/…` URL.
 
-2. **(If not already set) set function secrets**
+2. **Set the secret in both places (use the SAME value):**
    ```bash
+   SECRET="$(openssl rand -hex 16)"
+
+   # a) function env (checked inside notify-interest)
    supabase secrets set SLACK_WEBHOOK_URL="https://hooks.slack.com/services/XXX/YYY/ZZZ" --project-ref yjfagnezvkprkutrhdcd
-   # Reuses the shared RFP_WEBHOOK_SECRET; or set a dedicated one:
-   supabase secrets set INTEREST_WEBHOOK_SECRET="d60ff9d89ac4e5526c29a4360a924316" --project-ref yjfagnezvkprkutrhdcd
+   supabase secrets set INTEREST_WEBHOOK_SECRET="$SECRET" --project-ref yjfagnezvkprkutrhdcd
+
+   # b) Supabase Vault (read by the trigger) — run in the SQL editor:
+   #    select vault.create_secret('<paste $SECRET here>', 'interest_webhook_secret');
    ```
 
 3. **Deploy the function** (no JWT — the DB trigger calls it directly):
@@ -45,8 +53,21 @@ are likely already set. If so, you can skip step 2.
    psql "$SUPABASE_DB_URL" -f supabase/notify_interest_trigger.sql
    # …or paste supabase/notify_interest_trigger.sql into the SQL editor.
    ```
-   The trigger's `x-webhook-secret` must match the function's
-   `INTEREST_WEBHOOK_SECRET` / `RFP_WEBHOOK_SECRET`.
+   The function reads `INTEREST_WEBHOOK_SECRET` from its env; the trigger reads
+   the matching value from Vault (`interest_webhook_secret`). They must be equal.
+
+## Rotating the secret
+
+If the secret is ever exposed (e.g. committed to git), rotate it — removing it
+from files does **not** un-leak it:
+
+```bash
+NEW="$(openssl rand -hex 16)"
+supabase secrets set INTEREST_WEBHOOK_SECRET="$NEW" --project-ref yjfagnezvkprkutrhdcd
+# then in the SQL editor:
+#   select vault.update_secret(
+#     (select id from vault.secrets where name = 'interest_webhook_secret'), '<NEW>');
+```
 
 5. **Test:** submit the `/contact` form (or insert a test row into
    `interest_submissions`) → the alert should appear in your channel.

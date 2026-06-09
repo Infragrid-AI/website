@@ -82,7 +82,14 @@ export async function POST(request: Request) {
     });
 
     if (error) {
-      console.error("interest_submissions insert failed:", error);
+      // PostgrestError fields are non-enumerable, so a bare object log prints
+      // "{}". Pull the useful parts out explicitly so failures are diagnosable.
+      console.error("interest_submissions insert failed:", {
+        message: error.message,
+        code: error.code,
+        details: error.details,
+        hint: error.hint,
+      });
       return NextResponse.json(
         { error: "Something went wrong saving your details. Please email hello@infragrid.ai." },
         { status: 500 },
