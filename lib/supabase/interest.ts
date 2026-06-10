@@ -1,5 +1,5 @@
 import "server-only";
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 
 /**
  * Server-side Supabase client for the public interest form.
@@ -10,13 +10,43 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
  * cannot read, update, or delete them. Imported only by the /api/interest
  * route handler (server-side); never shipped to the browser.
  */
-let writeClient: SupabaseClient | undefined;
+type DynamicRelationship = {
+  foreignKeyName: string;
+  columns: string[];
+  isOneToOne?: boolean;
+  referencedRelation: string;
+  referencedColumns: string[];
+};
 
-export function createInterestClient(): SupabaseClient {
+type DynamicTable = {
+  Row: Record<string, unknown>;
+  Insert: Record<string, unknown>;
+  Update: Record<string, unknown>;
+  Relationships: DynamicRelationship[];
+};
+
+type DynamicFunction = {
+  Args: Record<string, unknown> | never;
+  Returns: unknown;
+};
+
+type DynamicSchema = {
+  Tables: Record<string, DynamicTable>;
+  Views: Record<string, DynamicTable>;
+  Functions: Record<string, DynamicFunction>;
+};
+
+type DynamicDatabase = Record<string, DynamicSchema>;
+type InterestSupabaseClient = ReturnType<typeof createClient<DynamicDatabase, string, string>>;
+
+let writeClient: InterestSupabaseClient | undefined;
+
+export function createInterestClient(): InterestSupabaseClient {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key =
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const schema = process.env.NEXT_PUBLIC_SUPABASE_DB_SCHEMA?.trim() || "public";
 
   if (!url || !key) {
     throw new Error(
@@ -25,9 +55,10 @@ export function createInterestClient(): SupabaseClient {
   }
 
   if (!writeClient) {
-    writeClient = createClient(url, key, {
+    writeClient = createClient<DynamicDatabase, string, string>(url, key, {
+      ...(schema === "public" ? {} : { db: { schema } }),
       auth: { persistSession: false, autoRefreshToken: false },
     });
   }
-  return writeClient;
+  return writeClient!;
 }
